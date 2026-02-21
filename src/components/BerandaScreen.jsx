@@ -37,7 +37,7 @@ export default function BerandaScreen({ user }) {
         return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
     };
 
-    const recentScans = scanHistory.slice(0, 15);
+
 
     return (
         <div className="animate-fade-in">
@@ -73,7 +73,7 @@ export default function BerandaScreen({ user }) {
                     <span className="text-dark-500 text-xs">{scanHistory.length} total</span>
                 </div>
 
-                {recentScans.length === 0 ? (
+                {scanHistory.length === 0 ? (
                     <div className="glass-card rounded-xl p-8 text-center">
                         <div className="w-12 h-12 rounded-xl bg-dark-800 flex items-center justify-center mx-auto mb-3">
                             <svg className="w-6 h-6 text-dark-600" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
@@ -84,8 +84,8 @@ export default function BerandaScreen({ user }) {
                         <p className="text-dark-600 text-xs">Gunakan menu Kontrol untuk scan QR code</p>
                     </div>
                 ) : (
-                    <div className="space-y-2">
-                        {recentScans.map((scan, i) => (
+                    <div className="max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin space-y-2">
+                        {scanHistory.map((scan, i) => (
                             <div
                                 key={scan.id || i}
                                 className="glass-card rounded-xl p-3 flex items-center gap-3 animate-fade-in"
