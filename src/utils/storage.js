@@ -26,6 +26,8 @@ export async function getScanHistory() {
         id: r.id,
         user: r.user_name,
         value: r.value,
+        name: r.name || '',
+        note: r.note || '',
         timestamp: r.timestamp,
     }));
 }
@@ -34,7 +36,9 @@ export async function addScanRecord(record) {
     const { error } = await supabase.from('scan_history').insert({
         id: record.id || Date.now().toString(),
         user_name: record.user,
-        value: record.value || record.qrValue || '',
+        value: record.value || '',
+        name: record.name || '',
+        note: record.note || '',
         timestamp: record.timestamp || new Date().toISOString(),
     });
     if (error) console.error('addScanRecord error:', error);

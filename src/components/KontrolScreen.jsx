@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
-import { getScanHistory, addScanRecord } from '../utils/storage';
+import { getScanHistory, addScanRecord, getQrPoints } from '../utils/storage';
 
 export default function KontrolScreen({ user }) {
     const [scanning, setScanning] = useState(false);
@@ -8,20 +8,23 @@ export default function KontrolScreen({ user }) {
     const [scanHistory, setScanHistory] = useState([]);
     const [showHistory, setShowHistory] = useState(false);
     const [error, setError] = useState(null);
+    const [note, setNote] = useState('');
+    const [qrPoints, setQrPoints] = useState([]);
+    const [saving, setSaving] = useState(false);
     const scannerRef = useRef(null);
     const containerRef = useRef(null);
 
     useEffect(() => {
-        const loadHistory = async () => {
-            const data = await getScanHistory();
-            setScanHistory(data);
+        const loadData = async () => {
+            const [history, points] = await Promise.all([getScanHistory(), getQrPoints()]);
+            setScanHistory(history);
+            setQrPoints(points);
         };
-        loadHistory();
+        loadData();
     }, []);
 
     useEffect(() => {
         return () => {
-            // Cleanup scanner on unmount
             if (scannerRef.current) {
                 scannerRef.current.stop().catch(() => { });
                 scannerRef.current.clear().catch(() => { });
@@ -30,9 +33,16 @@ export default function KontrolScreen({ user }) {
         };
     }, []);
 
+    // Find QR point name from scanned value
+    const resolveQrName = (decodedText) => {
+        const match = qrPoints.find(p => p.qrValue === decodedText);
+        return match ? match.name : decodedText;
+    };
+
     const startScanner = async () => {
         setError(null);
         setScanResult(null);
+        setNote('');
 
         try {
             const scanner = new Html5Qrcode("qr-reader");
@@ -46,17 +56,15 @@ export default function KontrolScreen({ user }) {
                     aspectRatio: 1.0,
                 },
                 (decodedText) => {
-                    // Success callback
-                    const record = {
+                    // Success callback — don't save yet, wait for user
+                    const pointName = resolveQrName(decodedText);
+                    setScanResult({
                         id: Date.now().toString(),
                         value: decodedText,
+                        name: pointName,
                         user,
                         timestamp: new Date().toISOString(),
-                    };
-                    addScanRecord(record).then(() => {
-                        getScanHistory().then(data => setScanHistory(data));
                     });
-                    setScanResult(record);
 
                     // Stop scanner after successful scan
                     scanner.stop().then(() => {
@@ -65,15 +73,33 @@ export default function KontrolScreen({ user }) {
                         setScanning(false);
                     }).catch(() => { });
                 },
-                () => {
-                    // Error callback (ignore — fires on every non-QR frame)
-                }
+                () => { }
             );
             setScanning(true);
         } catch (err) {
             setError('Gagal mengakses kamera. Pastikan izin kamera sudah diberikan.');
             console.error(err);
         }
+    };
+
+    const handleSaveScan = async () => {
+        if (!scanResult) return;
+        setSaving(true);
+        const record = {
+            ...scanResult,
+            note: note.trim(),
+        };
+        await addScanRecord(record);
+        const data = await getScanHistory();
+        setScanHistory(data);
+        setScanResult(null);
+        setNote('');
+        setSaving(false);
+    };
+
+    const handleDiscardScan = () => {
+        setScanResult(null);
+        setNote('');
     };
 
     const stopScanner = async () => {
@@ -110,7 +136,8 @@ export default function KontrolScreen({ user }) {
                 {!scanning ? (
                     <button
                         onClick={startScanner}
-                        className="w-full btn-glow text-white py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
+                        disabled={!!scanResult}
+                        className={`w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 ${scanResult ? 'bg-dark-800 text-dark-500 cursor-not-allowed border border-dark-700' : 'btn-glow text-white'}`}
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
@@ -137,7 +164,7 @@ export default function KontrolScreen({ user }) {
                 )}
             </div>
 
-            {/* Scan Result */}
+            {/* Scan Result + Notes */}
             {scanResult && (
                 <div className="glass-card rounded-2xl p-5 mb-5 animate-slide-up border-primary-500/30">
                     <div className="flex items-center gap-2 mb-3">
@@ -148,10 +175,50 @@ export default function KontrolScreen({ user }) {
                         </div>
                         <h3 className="font-semibold text-green-400">Scan Berhasil!</h3>
                     </div>
-                    <div className="bg-dark-900/50 rounded-xl p-4">
-                        <p className="text-dark-300 text-xs mb-1">Hasil:</p>
-                        <p className="text-white font-mono text-sm break-all">{scanResult.value || scanResult.result}</p>
+                    <div className="bg-dark-900/50 rounded-xl p-4 mb-4">
+                        <p className="text-dark-300 text-xs mb-1">Titik Kontrol:</p>
+                        <p className="text-white font-semibold text-base">{scanResult.name}</p>
                         <p className="text-dark-500 text-xs mt-2">{formatDate(scanResult.timestamp)}</p>
+                    </div>
+
+                    {/* Notes Input */}
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-dark-400 mb-2">
+                            Catatan <span className="text-dark-600">(opsional)</span>
+                        </label>
+                        <textarea
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            placeholder="Tambahkan catatan..."
+                            rows={2}
+                            className="w-full input-glow rounded-xl px-4 py-3 text-dark-200 text-sm focus:ring-0 resize-none"
+                        />
+                    </div>
+
+                    {/* Save / Discard */}
+                    <div className="flex gap-3">
+                        <button
+                            onClick={handleDiscardScan}
+                            className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-dark-800 text-dark-400 border border-dark-700 hover:border-dark-600 transition-colors"
+                        >
+                            Buang
+                        </button>
+                        <button
+                            onClick={handleSaveScan}
+                            disabled={saving}
+                            className="flex-1 btn-glow text-white py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-1.5"
+                        >
+                            {saving ? (
+                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            ) : (
+                                <>
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                    </svg>
+                                    Simpan
+                                </>
+                            )}
+                        </button>
                     </div>
                 </div>
             )}
@@ -186,9 +253,12 @@ export default function KontrolScreen({ user }) {
                             <div key={item.id} className="glass-card rounded-xl p-4">
                                 <div className="flex items-start justify-between">
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-dark-200 text-sm font-mono truncate">{item.value || item.result}</p>
+                                        <p className="text-dark-200 text-sm font-semibold truncate">{item.name || item.value}</p>
+                                        {item.note && (
+                                            <p className="text-dark-400 text-xs mt-1 italic">"{item.note}"</p>
+                                        )}
                                         <div className="flex items-center gap-2 mt-1.5">
-                                            <span className="text-primary-400/70 text-xs">{item.user || item.scannedBy}</span>
+                                            <span className="text-primary-400/70 text-xs">{item.user}</span>
                                             <span className="text-dark-700">•</span>
                                             <span className="text-dark-500 text-xs">{formatDate(item.timestamp)}</span>
                                         </div>

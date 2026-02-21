@@ -97,7 +97,10 @@ export default function BerandaScreen({ user }) {
                                     </svg>
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-dark-200 text-sm font-medium truncate">{scan.value || scan.qrValue || 'QR Scan'}</p>
+                                    <p className="text-dark-200 text-sm font-medium truncate">{scan.name || scan.value || 'QR Scan'}</p>
+                                    {scan.note && (
+                                        <p className="text-dark-400 text-[10px] mt-0.5 italic truncate">"{scan.note}"</p>
+                                    )}
                                     <p className="text-dark-500 text-[10px] mt-0.5">{scan.user || user}</p>
                                 </div>
                                 <div className="text-right flex-shrink-0">
