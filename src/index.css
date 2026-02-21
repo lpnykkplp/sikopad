@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #020617;
+  color: #e2e8f0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #155e75;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0891b2;
+}
+
+/* Background Glow Effects */
+.bg-glow-radial {
+  background: radial-gradient(ellipse at 50% 0%, rgba(6, 182, 212, 0.08) 0%, transparent 60%);
+}
+
+.bg-mesh {
+  background-image:
+    radial-gradient(at 20% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 50%),
+    radial-gradient(at 80% 20%, rgba(20, 184, 166, 0.06) 0%, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.03) 0%, transparent 70%);
+}
+
+/* Glass Effect */
+.glass {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(6, 182, 212, 0.15);
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(6, 182, 212, 0.12);
+}
+
+.glass-card:hover {
+  border-color: rgba(6, 182, 212, 0.3);
+}
+
+/* Gradient Borders */
+.border-gradient {
+  border-image: linear-gradient(135deg, rgba(6, 182, 212, 0.5), rgba(20, 184, 166, 0.5)) 1;
+}
+
+/* Text Glow */
+.text-glow {
+  text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+}
+
+.text-glow-sm {
+  text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+}
+
+/* Input Styling */
+.input-glow {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  transition: all 0.3s ease;
+}
+
+.input-glow:focus {
+  border-color: rgba(6, 182, 212, 0.6);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+  outline: none;
+}
+
+/* Button Glow */
+.btn-glow {
+  background: linear-gradient(135deg, #0891b2, #0e7490);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-glow:active {
+  transform: translateY(0);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+}
+
+/* QR Scanner Customization */
+#qr-reader {
+  border: none !important;
+  background: transparent !important;
+}
+
+#qr-reader video {
+  border-radius: 12px !important;
+  border: 2px solid rgba(6, 182, 212, 0.3) !important;
+}
+
+#qr-reader__scan_region {
+  border-radius: 12px !important;
+}
+
+#qr-reader__dashboard {
+  background: transparent !important;
+  padding: 12px !important;
+}
+
+#qr-reader__dashboard button {
+  background: linear-gradient(135deg, #0891b2, #0e7490) !important;
+  color: white !important;
+  border: none !important;
+  padding: 10px 24px !important;
+  border-radius: 8px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+#qr-reader__dashboard button:hover {
+  box-shadow: 0 0 25px rgba(6, 182, 212, 0.5) !important;
+}
+
+#qr-reader__dashboard select {
+  background: rgba(15, 23, 42, 0.8) !important;
+  color: #e2e8f0 !important;
+  border: 1px solid rgba(6, 182, 212, 0.3) !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+#qr-reader__dashboard span, #qr-reader__status_span {
+  color: #94a3b8 !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent 30%, rgba(6, 182, 212, 0.08) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Number Input */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+/* Tab indicator animation */
+.tab-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  background: linear-gradient(90deg, #06b6d4, #14b8a6);
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
