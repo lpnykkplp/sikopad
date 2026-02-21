@@ -53,7 +53,7 @@ export default function App() {
     const [activeTab, setActiveTab] = useState('beranda');
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-    const isAdmin = user === 'Admin';
+    const isAdmin = user === 'Administrator';
     const TABS = isAdmin ? [...BASE_TABS, ADMIN_TAB] : BASE_TABS;
 
     useEffect(() => {

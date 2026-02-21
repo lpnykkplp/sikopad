@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const USERS = ['Admin', 'RUPAM I', 'RUPAM II', 'RUPAM III', 'RUPAM IV'];
+const USERS = ['Administrator', 'RUPAM I', 'RUPAM II', 'RUPAM III', 'RUPAM IV'];
 
 export default function LoginScreen({ onLogin }) {
     const [selected, setSelected] = useState('');
@@ -77,8 +77,8 @@ export default function LoginScreen({ onLogin }) {
                         onClick={handleLogin}
                         disabled={!selected}
                         className={`w-full py-3.5 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 ${selected
-                                ? 'btn-glow text-white cursor-pointer'
-                                : 'bg-dark-800 text-dark-500 cursor-not-allowed border border-dark-700'
+                            ? 'btn-glow text-white cursor-pointer'
+                            : 'bg-dark-800 text-dark-500 cursor-not-allowed border border-dark-700'
                             }`}
                     >
                         {selected ? `Masuk sebagai ${selected}` : 'Pilih akun terlebih dahulu'}
