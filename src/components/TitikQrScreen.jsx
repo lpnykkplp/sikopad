@@ -126,17 +126,16 @@ export default function TitikQrScreen({ user }) {
 
     return (
         <div className="animate-fade-in">
-            {/* Header */}
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h2 className="text-xl font-bold text-white text-glow-sm">Titik QR</h2>
-                    <p className="text-dark-400 text-sm mt-1">Kelola titik kontrol QR code</p>
+                    <h2 className="text-xl font-bold text-slate-800">Titik QR</h2>
+                    <p className="text-slate-400 text-sm mt-1">Kelola titik kontrol QR code</p>
                 </div>
                 <div className="flex items-center gap-2">
                     {points.length > 0 && (
                         <button
                             onClick={handlePrintAll}
-                            className="bg-dark-800 hover:bg-dark-700 border border-dark-600 text-dark-300 hover:text-white px-3 py-2.5 rounded-xl text-sm font-medium flex items-center gap-1.5 transition-colors"
+                            className="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 px-3 py-2.5 rounded-xl text-sm font-medium flex items-center gap-1.5 transition-colors"
                             title="Cetak semua QR"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -147,7 +146,7 @@ export default function TitikQrScreen({ user }) {
                     )}
                     <button
                         onClick={() => setShowAddModal(true)}
-                        className="btn-glow text-white px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2"
+                        className="btn-primary px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -160,50 +159,47 @@ export default function TitikQrScreen({ user }) {
             {/* Points List */}
             {points.length === 0 ? (
                 <div className="text-center py-16">
-                    <div className="w-16 h-16 rounded-2xl bg-dark-800 flex items-center justify-center mx-auto mb-4">
-                        <svg className="w-8 h-8 text-dark-600" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                    <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" />
                         </svg>
                     </div>
-                    <p className="text-dark-500 text-sm mb-1">Belum ada titik QR</p>
-                    <p className="text-dark-600 text-xs">Tekan tombol "Tambah" untuk membuat titik baru</p>
+                    <p className="text-slate-500 text-sm mb-1">Belum ada titik QR</p>
+                    <p className="text-slate-400 text-xs">Tekan tombol "Tambah" untuk membuat titik baru</p>
                 </div>
             ) : (
                 <div className="space-y-3">
                     {points.map((point, index) => (
-                        <div key={point.id} className="glass-card rounded-xl p-4 animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
+                        <div key={point.id} className="flat-card p-4 animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
                             <div className="flex items-start gap-3">
-                                {/* QR Thumbnail */}
                                 <button
                                     onClick={() => setShowQrPreview(point)}
-                                    className="flex-shrink-0 bg-white rounded-lg p-1.5 hover:shadow-glow-sm transition-shadow cursor-pointer"
+                                    className="flex-shrink-0 bg-slate-50 rounded-lg p-1.5 hover:bg-slate-100 transition-colors cursor-pointer border border-slate-200"
                                 >
                                     <QRCodeSVG value={point.qrValue} size={52} level="M" />
                                 </button>
 
-                                {/* Info */}
                                 <div className="flex-1 min-w-0">
-                                    <h3 className="text-dark-200 font-semibold text-sm truncate">{point.name}</h3>
+                                    <h3 className="text-slate-700 font-semibold text-sm truncate">{point.name}</h3>
                                     {point.location && (
                                         <div className="flex items-center gap-1 mt-1">
-                                            <svg className="w-3 h-3 text-dark-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                            <svg className="w-3 h-3 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                                             </svg>
-                                            <span className="text-dark-500 text-xs truncate">{point.location}</span>
+                                            <span className="text-slate-400 text-xs truncate">{point.location}</span>
                                         </div>
                                     )}
-                                    <p className="text-dark-600 text-[10px] mt-1.5">
+                                    <p className="text-slate-400 text-[10px] mt-1.5">
                                         Dibuat: {new Date(point.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
                                     </p>
                                 </div>
 
-                                {/* Actions */}
                                 <div className="flex items-center gap-1.5 flex-shrink-0">
                                     <button
                                         onClick={() => setShowQrPreview(point)}
-                                        className="w-8 h-8 rounded-lg bg-primary-500/10 hover:bg-primary-500/20 flex items-center justify-center text-primary-400 transition-colors"
+                                        className="w-8 h-8 rounded-lg bg-primary-50 hover:bg-primary-100 flex items-center justify-center text-primary-500 transition-colors"
                                         title="Lihat QR"
                                     >
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -213,7 +209,7 @@ export default function TitikQrScreen({ user }) {
                                     </button>
                                     <button
                                         onClick={() => openEditModal(point)}
-                                        className="w-8 h-8 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 flex items-center justify-center text-amber-400 transition-colors"
+                                        className="w-8 h-8 rounded-lg bg-amber-50 hover:bg-amber-100 flex items-center justify-center text-amber-500 transition-colors"
                                         title="Edit"
                                     >
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -222,7 +218,7 @@ export default function TitikQrScreen({ user }) {
                                     </button>
                                     <button
                                         onClick={() => setShowDeleteConfirm(point.id)}
-                                        className="w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/20 flex items-center justify-center text-red-400 transition-colors"
+                                        className="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 transition-colors"
                                         title="Hapus"
                                     >
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -232,20 +228,19 @@ export default function TitikQrScreen({ user }) {
                                 </div>
                             </div>
 
-                            {/* Delete Confirmation Inline */}
                             {showDeleteConfirm === point.id && (
-                                <div className="mt-3 p-3 rounded-xl bg-red-500/10 border border-red-500/30 animate-fade-in">
-                                    <p className="text-red-400 text-sm mb-3">Yakin ingin menghapus titik "<span className="font-semibold">{point.name}</span>"?</p>
+                                <div className="mt-3 p-3 rounded-xl bg-red-50 border border-red-200 animate-fade-in">
+                                    <p className="text-red-600 text-sm mb-3">Yakin ingin menghapus titik "<span className="font-semibold">{point.name}</span>"?</p>
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => handleDelete(point.id)}
-                                            className="flex-1 py-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400 text-xs font-semibold transition-colors"
+                                            className="flex-1 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-semibold transition-colors"
                                         >
                                             Ya, Hapus
                                         </button>
                                         <button
                                             onClick={() => setShowDeleteConfirm(null)}
-                                            className="flex-1 py-2 rounded-lg bg-dark-700 hover:bg-dark-600 text-dark-300 text-xs font-semibold transition-colors"
+                                            className="flex-1 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold transition-colors"
                                         >
                                             Batal
                                         </button>
@@ -259,20 +254,20 @@ export default function TitikQrScreen({ user }) {
 
             {/* QR Preview Modal */}
             {showQrPreview && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in" onClick={() => setShowQrPreview(null)}>
-                    <div className="glass-card rounded-2xl p-6 w-full max-w-xs shadow-glow animate-slide-up" onClick={(e) => e.stopPropagation()}>
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30 animate-fade-in" onClick={() => setShowQrPreview(null)}>
+                    <div className="bg-white rounded-2xl p-6 w-full max-w-xs shadow-lg animate-slide-up border border-slate-200" onClick={(e) => e.stopPropagation()}>
                         <div className="text-center">
-                            <h3 className="text-lg font-semibold text-white mb-1">{showQrPreview.name}</h3>
+                            <h3 className="text-lg font-semibold text-slate-800 mb-1">{showQrPreview.name}</h3>
                             {showQrPreview.location && (
-                                <p className="text-dark-400 text-xs mb-4">{showQrPreview.location}</p>
+                                <p className="text-slate-400 text-xs mb-4">{showQrPreview.location}</p>
                             )}
-                            <div className="bg-white rounded-xl p-4 inline-block mx-auto mb-4 shadow-glow-sm">
+                            <div className="bg-white rounded-xl p-4 inline-block mx-auto mb-4 border border-slate-200">
                                 <QRCodeSVG value={showQrPreview.qrValue} size={200} level="H" includeMargin={false} />
                             </div>
-                            <p className="text-dark-500 text-[10px] font-mono break-all mb-4 px-2">{showQrPreview.qrValue}</p>
+                            <p className="text-slate-400 text-[10px] font-mono break-all mb-4 px-2">{showQrPreview.qrValue}</p>
                             <button
                                 onClick={() => setShowQrPreview(null)}
-                                className="w-full py-2.5 rounded-xl bg-dark-800 border border-dark-700 text-dark-300 text-sm font-medium hover:bg-dark-700 transition-colors"
+                                className="w-full py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-200 transition-colors"
                             >
                                 Tutup
                             </button>
@@ -283,50 +278,47 @@ export default function TitikQrScreen({ user }) {
 
             {/* Add / Edit Modal */}
             {(showAddModal || showEditModal) && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in" onClick={closeModal}>
-                    <div className="glass-card rounded-2xl p-6 w-full max-w-sm shadow-glow animate-slide-up" onClick={(e) => e.stopPropagation()}>
-                        <h3 className="text-lg font-semibold text-white mb-5">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30 animate-fade-in" onClick={closeModal}>
+                    <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-lg animate-slide-up border border-slate-200" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-lg font-semibold text-slate-800 mb-5">
                             {showEditModal ? 'Edit Titik QR' : 'Tambah Titik QR'}
                         </h3>
 
-                        {/* Name Input */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-dark-400 mb-1.5">Nama Titik</label>
+                            <label className="block text-sm font-medium text-slate-500 mb-1.5">Nama Titik</label>
                             <input
                                 type="text"
                                 value={formName}
                                 onChange={(e) => setFormName(e.target.value)}
                                 placeholder="Contoh: Pos Jaga Utama"
-                                className="w-full input-glow rounded-xl px-4 py-3 text-dark-200 text-sm focus:ring-0"
+                                className="w-full input-flat rounded-xl px-4 py-3 text-slate-700 text-sm"
                             />
                         </div>
 
-                        {/* Location Input */}
                         <div className="mb-6">
-                            <label className="block text-sm font-medium text-dark-400 mb-1.5">Lokasi <span className="text-dark-600">(opsional)</span></label>
+                            <label className="block text-sm font-medium text-slate-500 mb-1.5">Lokasi <span className="text-slate-400">(opsional)</span></label>
                             <input
                                 type="text"
                                 value={formLocation}
                                 onChange={(e) => setFormLocation(e.target.value)}
                                 placeholder="Contoh: Gerbang Depan Blok A"
-                                className="w-full input-glow rounded-xl px-4 py-3 text-dark-200 text-sm focus:ring-0"
+                                className="w-full input-flat rounded-xl px-4 py-3 text-slate-700 text-sm"
                             />
                         </div>
 
-                        {/* Buttons */}
                         <div className="flex gap-3">
                             <button
                                 onClick={closeModal}
-                                className="flex-1 py-2.5 rounded-xl bg-dark-800 border border-dark-700 text-dark-300 text-sm font-medium hover:bg-dark-700 transition-colors"
+                                className="flex-1 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-200 transition-colors"
                             >
                                 Batal
                             </button>
                             <button
                                 onClick={showEditModal ? handleEdit : handleAdd}
                                 disabled={!formName.trim()}
-                                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${formName.trim()
-                                    ? 'btn-glow text-white'
-                                    : 'bg-dark-800 text-dark-500 cursor-not-allowed border border-dark-700'
+                                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors ${formName.trim()
+                                    ? 'btn-primary'
+                                    : 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
                                     }`}
                             >
                                 {showEditModal ? 'Simpan' : 'Tambah'}

@@ -79,28 +79,25 @@ export default function App() {
     }
 
     return (
-        <div className="min-h-screen bg-dark-950 bg-mesh flex flex-col">
-            {/* Background Glow */}
-            <div className="fixed inset-0 pointer-events-none bg-glow-radial" />
-
+        <div className="min-h-screen bg-slate-50 flex flex-col">
             {/* Top Bar */}
-            <header className="sticky top-0 z-50 glass border-b border-dark-800/50">
+            <header className="sticky top-0 z-50 bg-white border-b border-slate-200">
                 <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500/30 to-teal-500/30 border border-primary-500/20 flex items-center justify-center shadow-glow-sm">
-                            <svg className="w-4 h-4 text-primary-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <div className="w-8 h-8 rounded-lg bg-primary-500 flex items-center justify-center">
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                             </svg>
                         </div>
                         <div>
-                            <h1 className="text-sm font-bold text-white tracking-wide">SIKOPAD</h1>
-                            <p className="text-[10px] text-dark-500 -mt-0.5">Sistem Kontrol Terpadu</p>
+                            <h1 className="text-sm font-bold text-slate-800 tracking-wide">SIKOPAD</h1>
+                            <p className="text-[10px] text-slate-400 -mt-0.5">Sistem Kontrol Terpadu</p>
                         </div>
                     </div>
 
                     <button
                         onClick={() => setShowLogoutConfirm(true)}
-                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:border-red-500/30 transition-colors text-xs font-semibold"
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-colors text-xs font-semibold"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
@@ -112,26 +109,26 @@ export default function App() {
 
             {/* Logout Confirmation Modal */}
             {showLogoutConfirm && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-                    <div className="glass-card rounded-2xl p-6 w-full max-w-xs shadow-glow animate-slide-up">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30 animate-fade-in">
+                    <div className="bg-white rounded-2xl p-6 w-full max-w-xs shadow-lg animate-slide-up border border-slate-200">
                         <div className="text-center">
-                            <div className="w-12 h-12 rounded-xl bg-red-500/15 border border-red-500/20 flex items-center justify-center mx-auto mb-4">
-                                <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                            <div className="w-12 h-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
                                 </svg>
                             </div>
-                            <h3 className="text-lg font-semibold text-white mb-1">Keluar?</h3>
-                            <p className="text-dark-400 text-sm mb-5">Anda akan keluar dari sistem</p>
+                            <h3 className="text-lg font-semibold text-slate-800 mb-1">Keluar?</h3>
+                            <p className="text-slate-500 text-sm mb-5">Anda akan keluar dari sistem</p>
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => setShowLogoutConfirm(false)}
-                                    className="flex-1 py-2.5 rounded-xl bg-dark-800 border border-dark-700 text-dark-300 text-sm font-medium hover:bg-dark-700 transition-colors"
+                                    className="flex-1 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-200 transition-colors"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     onClick={handleLogout}
-                                    className="flex-1 py-2.5 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 text-sm font-medium hover:bg-red-500/30 transition-colors"
+                                    className="flex-1 py-2.5 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors"
                                 >
                                     Ya, Keluar
                                 </button>
@@ -150,20 +147,18 @@ export default function App() {
             </main>
 
             {/* Bottom Navigation */}
-            <nav className="fixed bottom-0 left-0 right-0 z-50 glass border-t border-dark-800/50">
+            <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200">
                 <div className="max-w-lg mx-auto flex items-center">
                     {TABS.map((tab) => (
                         <button
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
-                            className={`flex-1 flex flex-col items-center py-3 relative transition-all duration-300 ${activeTab === tab.key
-                                ? 'text-primary-400 tab-active'
-                                : 'text-dark-500 hover:text-dark-400'
+                            className={`flex-1 flex flex-col items-center py-3 relative transition-colors duration-200 ${activeTab === tab.key
+                                ? 'text-primary-500 tab-active'
+                                : 'text-slate-400 hover:text-slate-600'
                                 }`}
                         >
-                            <span className={`transition-transform duration-300 ${activeTab === tab.key ? 'scale-110' : ''}`}>
-                                {tab.icon}
-                            </span>
+                            {tab.icon}
                             <span className="text-[10px] font-medium mt-1">{tab.label}</span>
                         </button>
                     ))}

@@ -33,7 +33,6 @@ export default function KontrolScreen({ user }) {
         };
     }, []);
 
-    // Find QR point name from scanned value
     const resolveQrName = (decodedText) => {
         const match = qrPoints.find(p => p.qrValue === decodedText);
         return match ? match.name : decodedText;
@@ -50,13 +49,8 @@ export default function KontrolScreen({ user }) {
 
             await scanner.start(
                 { facingMode: "environment" },
-                {
-                    fps: 10,
-                    qrbox: { width: 250, height: 250 },
-                    aspectRatio: 1.0,
-                },
+                { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
                 (decodedText) => {
-                    // Success callback — don't save yet, wait for user
                     const pointName = resolveQrName(decodedText);
                     setScanResult({
                         id: Date.now().toString(),
@@ -65,8 +59,6 @@ export default function KontrolScreen({ user }) {
                         user,
                         timestamp: new Date().toISOString(),
                     });
-
-                    // Stop scanner after successful scan
                     scanner.stop().then(() => {
                         scanner.clear();
                         scannerRef.current = null;
@@ -85,11 +77,7 @@ export default function KontrolScreen({ user }) {
     const handleSaveScan = async () => {
         if (!scanResult) return;
         setSaving(true);
-        const record = {
-            ...scanResult,
-            note: note.trim(),
-        };
-        await addScanRecord(record);
+        await addScanRecord({ ...scanResult, note: note.trim() });
         const data = await getScanHistory();
         setScanHistory(data);
         setScanResult(null);
@@ -123,21 +111,19 @@ export default function KontrolScreen({ user }) {
 
     return (
         <div className="animate-fade-in">
-            {/* Header */}
             <div className="mb-6">
-                <h2 className="text-xl font-bold text-white text-glow-sm">Kontrol QR</h2>
-                <p className="text-dark-400 text-sm mt-1">Scan QR code untuk kontrol</p>
+                <h2 className="text-xl font-bold text-slate-800">Kontrol QR</h2>
+                <p className="text-slate-400 text-sm mt-1">Scan QR code untuk kontrol</p>
             </div>
 
-            {/* Scanner Card */}
-            <div className="glass-card rounded-2xl p-5 mb-5">
+            <div className="flat-card p-5 mb-5">
                 <div id="qr-reader" ref={containerRef} className="mb-4 rounded-xl overflow-hidden" />
 
                 {!scanning ? (
                     <button
                         onClick={startScanner}
                         disabled={!!scanResult}
-                        className={`w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 ${scanResult ? 'bg-dark-800 text-dark-500 cursor-not-allowed border border-dark-700' : 'btn-glow text-white'}`}
+                        className={`w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-colors ${scanResult ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'btn-primary'}`}
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
@@ -148,7 +134,7 @@ export default function KontrolScreen({ user }) {
                 ) : (
                     <button
                         onClick={stopScanner}
-                        className="w-full bg-red-600/80 hover:bg-red-600 text-white py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-colors shadow-[0_0_20px_rgba(239,68,68,0.3)]"
+                        className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 7.5A2.25 2.25 0 017.5 5.25h9a2.25 2.25 0 012.25 2.25v9a2.25 2.25 0 01-2.25 2.25h-9a2.25 2.25 0 01-2.25-2.25v-9z" />
@@ -158,7 +144,7 @@ export default function KontrolScreen({ user }) {
                 )}
 
                 {error && (
-                    <div className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                    <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">
                         {error}
                     </div>
                 )}
@@ -166,47 +152,45 @@ export default function KontrolScreen({ user }) {
 
             {/* Scan Result + Notes */}
             {scanResult && (
-                <div className="glass-card rounded-2xl p-5 mb-5 animate-slide-up border-primary-500/30">
+                <div className="flat-card p-5 mb-5 animate-slide-up border-primary-200">
                     <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
-                            <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                             </svg>
                         </div>
-                        <h3 className="font-semibold text-green-400">Scan Berhasil!</h3>
+                        <h3 className="font-semibold text-green-600">Scan Berhasil!</h3>
                     </div>
-                    <div className="bg-dark-900/50 rounded-xl p-4 mb-4">
-                        <p className="text-dark-300 text-xs mb-1">Titik Kontrol:</p>
-                        <p className="text-white font-semibold text-base">{scanResult.name}</p>
-                        <p className="text-dark-500 text-xs mt-2">{formatDate(scanResult.timestamp)}</p>
+                    <div className="bg-slate-50 rounded-xl p-4 mb-4">
+                        <p className="text-slate-500 text-xs mb-1">Titik Kontrol:</p>
+                        <p className="text-slate-800 font-semibold text-base">{scanResult.name}</p>
+                        <p className="text-slate-400 text-xs mt-2">{formatDate(scanResult.timestamp)}</p>
                     </div>
 
-                    {/* Notes Input */}
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-dark-400 mb-2">
-                            Catatan <span className="text-dark-600">(opsional)</span>
+                        <label className="block text-sm font-medium text-slate-500 mb-2">
+                            Catatan <span className="text-slate-400">(opsional)</span>
                         </label>
                         <textarea
                             value={note}
                             onChange={(e) => setNote(e.target.value)}
                             placeholder="Tambahkan catatan..."
                             rows={2}
-                            className="w-full input-glow rounded-xl px-4 py-3 text-dark-200 text-sm focus:ring-0 resize-none"
+                            className="w-full input-flat rounded-xl px-4 py-3 text-slate-700 text-sm resize-none"
                         />
                     </div>
 
-                    {/* Save / Discard */}
                     <div className="flex gap-3">
                         <button
                             onClick={handleDiscardScan}
-                            className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-dark-800 text-dark-400 border border-dark-700 hover:border-dark-600 transition-colors"
+                            className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-slate-100 text-slate-500 border border-slate-200 hover:bg-slate-200 transition-colors"
                         >
                             Buang
                         </button>
                         <button
                             onClick={handleSaveScan}
                             disabled={saving}
-                            className="flex-1 btn-glow text-white py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-1.5"
+                            className="flex-1 btn-primary py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-1.5"
                         >
                             {saving ? (
                                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -226,41 +210,40 @@ export default function KontrolScreen({ user }) {
             {/* History Toggle */}
             <button
                 onClick={() => setShowHistory(!showHistory)}
-                className="w-full glass-card rounded-2xl p-4 flex items-center justify-between hover:border-primary-500/30 transition-all group"
+                className="w-full flat-card p-4 flex items-center justify-between hover:border-primary-300 transition-colors group"
             >
                 <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-primary-500/10 flex items-center justify-center group-hover:bg-primary-500/20 transition-colors">
-                        <svg className="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <div className="w-9 h-9 rounded-lg bg-primary-50 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <span className="font-medium text-dark-300 text-sm">Riwayat Scan ({scanHistory.length})</span>
+                    <span className="font-medium text-slate-600 text-sm">Riwayat Scan ({scanHistory.length})</span>
                 </div>
-                <svg className={`w-5 h-5 text-dark-500 transition-transform duration-300 ${showHistory ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <svg className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${showHistory ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
             </button>
 
-            {/* History List */}
             {showHistory && (
                 <div className="mt-3 space-y-2 animate-slide-up">
                     {scanHistory.length === 0 ? (
-                        <div className="text-center py-8 text-dark-500 text-sm">
+                        <div className="text-center py-8 text-slate-400 text-sm">
                             Belum ada riwayat scan
                         </div>
                     ) : (
                         scanHistory.map((item) => (
-                            <div key={item.id} className="glass-card rounded-xl p-4">
+                            <div key={item.id} className="flat-card p-4">
                                 <div className="flex items-start justify-between">
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-dark-200 text-sm font-semibold truncate">{item.name || item.value}</p>
+                                        <p className="text-slate-700 text-sm font-semibold truncate">{item.name || item.value}</p>
                                         {item.note && (
-                                            <p className="text-dark-400 text-xs mt-1 italic">"{item.note}"</p>
+                                            <p className="text-slate-400 text-xs mt-1 italic">"{item.note}"</p>
                                         )}
                                         <div className="flex items-center gap-2 mt-1.5">
-                                            <span className="text-primary-400/70 text-xs">{item.user}</span>
-                                            <span className="text-dark-700">•</span>
-                                            <span className="text-dark-500 text-xs">{formatDate(item.timestamp)}</span>
+                                            <span className="text-primary-500 text-xs">{item.user}</span>
+                                            <span className="text-slate-300">•</span>
+                                            <span className="text-slate-400 text-xs">{formatDate(item.timestamp)}</span>
                                         </div>
                                     </div>
                                 </div>
