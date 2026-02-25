@@ -6,5 +6,15 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-qr': ['html5-qrcode', 'qrcode.react'],
+          'vendor-react': ['react', 'react-dom'],
+        }
+      }
+    }
   }
 })
