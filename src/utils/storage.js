@@ -54,6 +54,7 @@ export async function getApelRecords() {
     return data.map(r => ({
         id: r.id,
         user: r.user_name,
+        shift: r.shift || '',
         anggrek: r.anggrek,
         bougenville: r.bougenville,
         cempaka: r.cempaka,
@@ -70,6 +71,7 @@ export async function addApelRecord(record) {
     const { error } = await supabase.from('apel_records').insert({
         id: record.id || Date.now().toString(),
         user_name: record.user,
+        shift: record.shift || '',
         anggrek: record.anggrek || 0,
         bougenville: record.bougenville || 0,
         cempaka: record.cempaka || 0,

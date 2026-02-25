@@ -35,8 +35,15 @@ const BLOCKS = [
 
 const emptyForm = () => BLOCKS.reduce((acc, b) => ({ ...acc, [b.key]: '' }), {});
 
+const SHIFTS = [
+    { key: 'pagi', label: 'Pagi', icon: '🌅', color: 'bg-amber-50 border-amber-300 text-amber-700' },
+    { key: 'siang', label: 'Siang', icon: '☀️', color: 'bg-sky-50 border-sky-300 text-sky-700' },
+    { key: 'malam', label: 'Malam', icon: '🌙', color: 'bg-indigo-50 border-indigo-300 text-indigo-700' },
+];
+
 export default function ApelScreen({ user }) {
     const [form, setForm] = useState(emptyForm());
+    const [shift, setShift] = useState('');
     const [records, setRecords] = useState([]);
     const [view, setView] = useState('form');
     const [editingId, setEditingId] = useState(null);
@@ -58,17 +65,18 @@ export default function ApelScreen({ user }) {
     const total = Object.values(form).reduce((sum, v) => sum + (parseInt(v) || 0), 0);
 
     const handleSave = async () => {
-        if (total === 0) return;
+        if (total === 0 || !shift) return;
 
         if (editingId) {
             const data = {};
             BLOCKS.forEach((b) => { data[b.key] = parseInt(form[b.key]) || 0; });
             data.total = Object.values(data).reduce((s, v) => s + v, 0);
+            data.shift = shift;
             const updated = await updateApelRecord(editingId, data);
             setRecords(updated);
             setEditingId(null);
         } else {
-            const record = { id: Date.now().toString(), user, timestamp: new Date().toISOString() };
+            const record = { id: Date.now().toString(), user, shift, timestamp: new Date().toISOString() };
             BLOCKS.forEach((b) => { record[b.key] = parseInt(form[b.key]) || 0; });
             record.total = Object.values(form).reduce((s, v) => s + (parseInt(v) || 0), 0);
             await addApelRecord(record);
@@ -77,6 +85,7 @@ export default function ApelScreen({ user }) {
         }
 
         setForm(emptyForm());
+        setShift('');
         setSaveSuccess(true);
         setTimeout(() => setSaveSuccess(false), 2000);
     };
@@ -86,6 +95,7 @@ export default function ApelScreen({ user }) {
         const f = {};
         BLOCKS.forEach((b) => { f[b.key] = record[b.key]?.toString() || ''; });
         setForm(f);
+        setShift(record.shift || '');
         setView('form');
     };
 
@@ -98,6 +108,7 @@ export default function ApelScreen({ user }) {
     const handleCancelEdit = () => {
         setEditingId(null);
         setForm(emptyForm());
+        setShift('');
     };
 
     const formatDate = (iso) => {
@@ -151,6 +162,25 @@ export default function ApelScreen({ user }) {
                         </div>
                     )}
 
+                    {/* Shift Selector */}
+                    <div className="mb-5">
+                        <label className="block text-sm font-medium text-slate-500 mb-2">Waktu Apel</label>
+                        <div className="grid grid-cols-3 gap-2">
+                            {SHIFTS.map((s) => (
+                                <button
+                                    key={s.key}
+                                    onClick={() => setShift(s.key)}
+                                    className={`py-3 rounded-xl text-sm font-semibold border-2 transition-all duration-200 flex items-center justify-center gap-1.5 ${shift === s.key
+                                            ? s.color + ' ring-2 ring-offset-1 ring-primary-300'
+                                            : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'
+                                        }`}
+                                >
+                                    <span>{s.icon}</span> {s.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     <div className="grid grid-cols-2 gap-3 mb-5">
                         {BLOCKS.map((block) => (
                             <div
@@ -183,8 +213,8 @@ export default function ApelScreen({ user }) {
 
                     <button
                         onClick={handleSave}
-                        disabled={total === 0}
-                        className={`w-full py-3.5 rounded-xl font-semibold text-sm tracking-wide transition-colors duration-200 flex items-center justify-center gap-2 ${total > 0
+                        disabled={total === 0 || !shift}
+                        className={`w-full py-3.5 rounded-xl font-semibold text-sm tracking-wide transition-colors duration-200 flex items-center justify-center gap-2 ${total > 0 && shift
                             ? 'btn-primary cursor-pointer'
                             : 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
                             }`}
@@ -225,7 +255,15 @@ export default function ApelScreen({ user }) {
                             <div key={record.id} className="flat-card p-4">
                                 <div className="flex items-center justify-between mb-3">
                                     <div>
-                                        <p className="text-slate-700 text-sm font-semibold">{record.user}</p>
+                                        <div className="flex items-center gap-2">
+                                            <p className="text-slate-700 text-sm font-semibold">{record.user}</p>
+                                            {record.shift && (
+                                                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${SHIFTS.find(s => s.key === record.shift)?.color || 'bg-slate-50 border-slate-200 text-slate-500'
+                                                    }`}>
+                                                    {SHIFTS.find(s => s.key === record.shift)?.icon} {SHIFTS.find(s => s.key === record.shift)?.label}
+                                                </span>
+                                            )}
+                                        </div>
                                         <p className="text-slate-400 text-xs mt-0.5">{formatDate(record.timestamp)}</p>
                                     </div>
                                     <div className="px-3 py-1 rounded-lg bg-primary-50 border border-primary-200">
